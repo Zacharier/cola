@@ -1,0 +1,3 @@
+.*
+src/cola/proto/cola.pb.cc
+src/cola/proto/cola.pb.h

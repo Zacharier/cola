@@ -1,0 +1,58 @@
+package cola;
+
+message ShapeConfig {
+  repeated int64 dims = 1;
+}
+
+message DataSetConfig {
+  optional uint32 batch_size = 1;
+  optional string data_path = 2;
+  optional uint32 data_block = 3;
+  optional string label_path = 4;
+  optional uint32 label_block = 5;
+}
+
+message WeightConfig {
+  optional string filler = 1;
+  optional ShapeConfig shape = 2;
+  optional bytes data = 3;
+  optional bytes grad = 4;
+}
+
+message AffineConfig {
+  optional WeightConfig weight = 1;
+  optional WeightConfig bias = 2;
+}
+
+message LayerConfig {
+  optional string name = 1;
+  optional string type = 2;
+  optional string output = 3;
+  optional uint32 input_size = 4;
+  optional uint32 output_size = 5;
+  repeated string phases = 6;
+  optional DataSetConfig data_set = 7;
+  optional AffineConfig affine = 9;
+}
+
+message NetworkConfig {
+  optional string name = 1;
+  // The mode is as follows:
+  // - train
+  // - test
+  // - infer
+  optional string phase = 2;
+  repeated LayerConfig layer = 3;
+}
+
+message OptimizerConfig {
+  optional string type = 1;
+  optional float lr = 2;
+}
+
+message Config {
+  optional uint32 max_iter = 1;
+  optional uint32 test_interval = 2;
+  optional string network = 3;
+  optional OptimizerConfig optimizer = 4;
+}

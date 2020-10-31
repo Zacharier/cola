@@ -1,0 +1,75 @@
+name: "simplenet"
+phase: "train"
+layer {
+  name: "data0"
+  type: "Data"
+  output: "affine1"
+  phases: "train"
+  data_set {
+    batch_size: 100
+    data_path: "data/mnist/train-images-idx3-ubyte"
+    data_block: 784
+    label_path: "data/mnist/train-labels-idx1-ubyte"
+    label_block: 1
+  }
+}
+layer {
+  name: "data1"
+  type: "Data"
+  output: "affine1"
+  phases: "infer"
+  data_set {
+    batch_size: 1000000
+    data_path: "data/mnist/t10k-images-idx3-ubyte"
+    data_block: 784
+    label_path: "data/mnist/t10k-labels-idx1-ubyte"
+    label_block: 1
+  }
+}
+layer {
+  name: "affine1"
+  type: "Affine"
+  output: "relu1"
+  phases: "train"
+  phases: "infer"
+  input_size: 784
+  output_size: 50
+  affine {
+    weight {
+      filler: "normal"
+    }
+    bias {
+      filler: "zero"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "Relu"
+  output: "affine2"
+  phases: "train"
+  phases: "infer"
+}
+layer {
+  name: "affine2"
+  type: "Affine"
+  output: "softmaxwithloss"
+  input_size: 50
+  output_size: 10
+  phases: "train"
+  phases: "infer"
+  affine {
+    weight {
+      filler: "normal"
+    }
+    bias {
+      filler: "zero"
+    }
+  }
+}
+layer {
+  name: "softmaxwithloss"
+  type: "SoftmaxWithLoss"
+  phases: "train"
+  phases: "infer"
+}
