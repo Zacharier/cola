@@ -28,7 +28,7 @@ class Trainer {
 
   bool Load(const Config& conf);
 
-  void Train();
+  void Train(const std::string& model);
 
  private:
   size_t max_iter_;

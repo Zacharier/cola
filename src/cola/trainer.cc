@@ -15,8 +15,10 @@
 
 #include "cola/trainer.h"
 
-#include "cola/base/logging.h"
+#include <fstream>
+
 #include "cola/base/io_util.h"
+#include "cola/base/logging.h"
 #include "cola/optimizers/sgd_optimizer.h"
 
 namespace cola {
@@ -40,7 +42,7 @@ bool Trainer::Load(const Config& conf) {
   return true;
 }
 
-void Trainer::Train() {
+void Trainer::Train(const std::string& model) {
   Context ctx;
   Variable input;
   Variable output;
@@ -52,9 +54,14 @@ void Trainer::Train() {
     if (i % test_interval_ == 0) {  // Epoch
       ++epoch;
       Float acc = network_.Accuracy(ctx);
-      LOG(INFO) << "iter: " << i << ", loss: " << 0 << ", epoch: " << epoch
-                << ", acc: " << acc;
+      LOG(INFO) << "iter: " << i << ", epoch: " << epoch << ", acc: " << acc;
     }
   }
+
+  NetworkConfig nc;
+  network_.Snapshot(&nc);
+  std::ofstream os(model, std::ios::binary);
+  nc.SerializeToOstream(&os);
 }
+
 }  // namespace cola

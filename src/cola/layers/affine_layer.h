@@ -30,7 +30,7 @@ class AffineLayer : public Layer {
   void Backward(const Context& ctx, const Variable& output,
                 Variable* input) override;
 
-  void Snapshot(LayerConfig* config);
+  void Snapshot(LayerConfig* config) const override;
 
  private:
   Weight w_;

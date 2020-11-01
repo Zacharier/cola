@@ -47,13 +47,10 @@ class Network {
   void Snapshot(NetworkConfig* conf);
  
  private:
-  const std::vector<Layer*>& layers(Phase phase) { return layers_[phase]; }
-
   size_t net_id_;
   Phase phase_;
 
   std::vector<Layer*> layers_[kNums];
-  //    std::vector<Layer*> infer_layers_;
 
   std::vector<Layer*> all_layers_;
 };

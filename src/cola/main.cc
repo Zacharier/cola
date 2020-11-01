@@ -91,6 +91,9 @@ static Options DoArgs(int argc, const char* argv[]) {
     if (options.config.empty()) {
       Usage(argv[0], "required config path");
     }
+    if (options.model.empty()) {
+      Usage(argv[0], "required model path");
+    }
   } else if (options.phase == "infer") {
     if (options.model.empty()) {
       Usage(argv[0], "required model path");
@@ -115,7 +118,7 @@ int main(int argc, const char* argv[]) {
     if (!trainer.Load(config)) {
       return 1;
     }
-    trainer.Train();
+    trainer.Train(options.model);
   } else {
     cola::Predictor predictor;
     if (!predictor.Load(options.model)) {
@@ -125,10 +128,12 @@ int main(int argc, const char* argv[]) {
     if (!cola::ReadFile(options.input, &content)) {
       return 1;
     }
-    auto input = cola::Tensor<cola::Float>::Create(
-        (cola::Float*)content.data(),
-        {1, content.size() / sizeof(cola::Float)});
-    auto output = cola::Tensor<cola::Float>::Create(input.shape());
+    auto input = cola::Tensor<cola::Float>::Create({1, content.size()});
+    cola::Float* data = input.mutable_data();
+    for (cola::Byte b : content) {
+      *data++ = b;
+    }
+    auto output = cola::Tensor<cola::Float>::Create({1, 10});
 
     predictor.Predict(input, &output);
     for (size_t i = 0; i < output.size(); ++i) {

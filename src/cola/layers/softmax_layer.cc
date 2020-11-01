@@ -24,9 +24,7 @@ void SoftmaxLayer::Forward(const Context& ctx, const Variable& input,
                            Variable* output) const {
   const auto& x = input.data();
   auto* out = output->mutable_data();
-  if (out->empty()) {
-    out->Resize(x.shape());
-  }
+  out->Resize(x.shape());
   Softmax(x.data(), out->mutable_data(), out->shape(0), out->count(1));
 }
 

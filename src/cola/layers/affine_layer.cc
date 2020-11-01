@@ -95,20 +95,22 @@ void AffineLayer::Backward(const Context& ctx, const Variable& output,
   MatrixSum(dout.data(), dout.shape(0), dout.count(1), 0, db->mutable_data());
 }
 
-void AffineLayer::Snapshot(LayerConfig* config) {
+void AffineLayer::Snapshot(LayerConfig* config) const {
   *config = layer_config_;
   auto* affine = config->mutable_affine();
   affine->mutable_weight()->set_filler("data");
-  affine->mutable_weight()->set_data(w_.data().data(), w_.data().size());
+  affine->mutable_weight()->set_data(w_.data().data(),
+                                     w_.data().size() * sizeof(Float));
   auto* wshape = affine->mutable_weight()->mutable_shape();
   for (size_t i = 0; i < w_.data().shape().size(); ++i) {
-    wshape->add_dims(w_.data().shape(0));
+    wshape->add_dims(w_.data().shape(i));
   }
   affine->mutable_bias()->set_filler("data");
-  affine->mutable_bias()->set_data(b_.data().data(), b_.data().size());
+  affine->mutable_bias()->set_data(b_.data().data(),
+                                   b_.data().size() * sizeof(Float));
   auto* bshape = affine->mutable_bias()->mutable_shape();
   for (size_t i = 0; i < b_.data().shape().size(); ++i) {
-    bshape->add_dims(b_.data().shape(0));
+    bshape->add_dims(b_.data().shape(i));
   }
 }
 REGISTER_LAYER(Affine);
