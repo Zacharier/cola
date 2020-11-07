@@ -202,6 +202,36 @@ void Tensor<T>::Resize(Shape shape, T v) {
 }
 
 template <typename T>
+void Tensor<T>::Transpose(std::vector<size_t> new_indices) {
+  Shape new_shape = shape_;
+  for (size_t i = 0; i < new_indices.size(); ++i) {
+    new_shape[i] = shape_[new_indices[i]];
+  }
+  auto new_data = std::make_unique<T[]>(shape_.count());
+  std::vector<int> indices(shape_.size());
+  for (size_t i = 0; i < shape_.count(); ++i) {
+    std::fill(indices.begin(), indices.end(), 0);
+    size_t x = i;
+    for (int j = shape_.size() - 1; j >= 0; --j) {
+      size_t t = x / shape_[j];
+      indices[j] = x % shape_[j];
+      if (t == 0) break;
+      x = t;
+    }
+    size_t index = 0;
+    for (size_t j = 0; j < new_shape.size(); ++j) {
+      index += indices[new_indices[j]];
+      if (j + 1 < new_shape.size()) {
+        index *= new_shape[j + 1];
+      }
+    }
+    new_data[index] = data_[i];
+  }
+  memcpy(data_, new_data.get(), shape_.count() * sizeof(T));
+  shape_ = std::move(new_shape);
+}
+
+template <typename T>
 void Tensor<T>::operator+=(const T& v) {
   Add(data_, v, shape_.count(), data_);
 }

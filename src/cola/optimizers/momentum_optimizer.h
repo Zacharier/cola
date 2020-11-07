@@ -13,18 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cola/optimizers/sgd_optimizer.h"
+#ifndef COLA_OPTIMIZERS_MOMENTUM_OPTIMIZER_H_
+#define COLA_OPTIMIZERS_MOMENTUM_OPTIMIZER_H_
+
+#include "cola/optimizers/optimizer.h"
 
 namespace cola {
 
-SgdOptimizer::SgdOptimizer(const std::vector<Weight*>& weights, Float lr)
-    : Optimizer(weights, lr) {}
+class MomentumOptimizer : public Optimizer {
+ public:
+  MomentumOptimizer(const std::vector<Weight*>& weights, Float lr,
+                    Float momentum);
 
-void SgdOptimizer::Step() {
-  for (auto* weight : weights_) {
-    *weight->mutable_grad() *= lr_;
-    *weight->mutable_data() -= weight->grad();
-  }
-}
+  void Step() override;
+
+ private:
+  Float momentum_;
+  std::vector<Tensor<Float>> velocities_;
+};
 
 }  // namespace cola
+
+#endif  // COLA_OPTIMIZERS_MOMENTUM_OPTIMIZER_H_

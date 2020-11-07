@@ -23,8 +23,8 @@ Weight::Weight() {}
 
 Weight::~Weight() {}
 
-void Weight::Update() {
-  CHECK(data_.shape() == grad_.shape());
-  data_ -= grad_;
-}
+// void Weight::Update() {
+//   CHECK(data_.shape() == grad_.shape());
+//   data_ -= grad_;
+// }
 }  // namespace cola

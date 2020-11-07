@@ -83,6 +83,8 @@ class Shape {
 
   size_t operator[](size_t i) const { return data_[i + kHeaderSize]; }
 
+  size_t& operator[](size_t i) { return data_[i + kHeaderSize]; }
+
   std::string ToString() const;
 
   bool operator==(const Shape& rhs) const;

@@ -43,6 +43,8 @@ struct FloatingPoint {
   static R Log(R v) { return ::log(v); }
 
   static R Exp(R v) { return ::exp(v); }
+
+  static R Sqrt(R v) { return ::sqrt(v); }
 };
 
 template <>
@@ -50,6 +52,8 @@ struct FloatingPoint<float> {
   static float Log(float v) { return ::logf(v); }
 
   static float Exp(float v) { return ::expf(v); }
+
+  static float Sqrt(float v) { return ::sqrtf(v); }
 };
 }  // namespace details
 
@@ -204,6 +208,13 @@ void Sigmoid(const T* a, T* b, const size_t n) {
   T one(1.0);
   for (size_t i = 0; i < n; ++i) {
     b[i] = one / (one + details::FloatingPoint<T>::Exp(-a[i]));
+  }
+}
+
+template <typename T>
+void Sqrt(const T* a, T* b, const size_t n) {
+  for (size_t i = 0; i < n; ++i) {
+    b[i] = details::FloatingPoint<T>::Sqrt(a[i]);
   }
 }
 

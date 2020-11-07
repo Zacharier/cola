@@ -48,6 +48,7 @@ message NetworkConfig {
 message OptimizerConfig {
   optional string type = 1;
   optional float lr = 2;
+  optional float momentum = 3;
 }
 
 message Config {
