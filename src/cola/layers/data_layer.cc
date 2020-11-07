@@ -38,7 +38,7 @@ void DataLayer::Forward(const Context& ctx, const Variable& input,
     auto* mutable_data = output->mutable_data();
     mutable_data->Resize({batch_size, datas[0].size()});
     auto* p = mutable_data->mutable_data();
-    for (const Slice d : datas) {
+    for (const Slice& d : datas) {
       for (const Byte c : d) {
         *p++ = Float(c) / 255;
       }

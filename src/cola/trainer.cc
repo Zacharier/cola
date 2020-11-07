@@ -19,7 +19,7 @@
 
 #include "cola/base/io_util.h"
 #include "cola/base/logging.h"
-#include "cola/optimizers/sgd_optimizer.h"
+#include "cola/optimizers/optimizer.h"
 
 namespace cola {
 
@@ -35,11 +35,8 @@ bool Trainer::Load(const Config& conf) {
   test_interval_ = conf.test_interval();
 
   std::vector<Weight*> weights = network_.GetWeights();
-  const auto& opt_cfg = conf.optimizer();
-  if (opt_cfg.type() == "sgd") {
-    optimizer_ = new SgdOptimizer(weights, opt_cfg.lr());
-  }
-  return true;
+  optimizer_ = Optimizer::Create(conf.optimizer(), weights);
+  return optimizer_ != nullptr;
 }
 
 void Trainer::Train(const std::string& model) {

@@ -90,6 +90,8 @@ class Tensor {
 
   void Resize(Shape shape, T v = T());
 
+  void Transpose(std::vector<size_t> new_indices);
+
   void operator+=(const T& v);
   void operator+=(const Tensor& other);
   void operator-=(const T& v);

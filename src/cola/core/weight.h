@@ -28,7 +28,7 @@ class Weight : public Variable {
   Weight();
   ~Weight();
 
-  void Update();
+  // void Update();
 
   const std::string& name() const { return name_; }
 

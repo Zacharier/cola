@@ -15,11 +15,29 @@
 
 #include "cola/optimizers/optimizer.h"
 
+#include "cola/base/logging.h"
+#include "cola/optimizers/ada_grad_optimizer.h"
+#include "cola/optimizers/momentum_optimizer.h"
+#include "cola/optimizers/sgd_optimizer.h"
+
 namespace cola {
 
 Optimizer::Optimizer(const std::vector<Weight*>& weights, Float lr)
     : weights_(weights), lr_(lr) {}
 
 Optimizer::~Optimizer() {}
+
+Optimizer* Optimizer::Create(const OptimizerConfig& config,
+                             const std::vector<Weight*>& weights) {
+  if (config.type() == "sgd") {
+    return new SgdOptimizer(weights, config.lr());
+  } else if (config.type() == "momentum") {
+    return new MomentumOptimizer(weights, config.lr(), config.momentum());
+  } else if (config.type() == "ada_grad") {
+    return new AdaGradOptimizer(weights, config.lr());
+  } else {
+    CHECK(false);
+  }
+}
 
 }  // namespace cola

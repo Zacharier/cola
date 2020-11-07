@@ -16,9 +16,11 @@
 #ifndef COLA_OPTIMIZERS_OPTIMIZER_H_
 #define COLA_OPTIMIZERS_OPTIMIZER_H_
 
+#include <vector>
+
 #include "cola/base/types.h"
-#include "cola/proto/cola.pb.h"
 #include "cola/core/weight.h"
+#include "cola/proto/cola.pb.h"
 
 namespace cola {
 
@@ -29,6 +31,9 @@ class Optimizer {
   virtual ~Optimizer();
 
   virtual void Step() = 0;
+
+  static Optimizer* Create(const OptimizerConfig& config,
+                           const std::vector<Weight*>& weights);
 
  protected:
   const std::vector<Weight*> weights_;
